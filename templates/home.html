@@ -1,0 +1,186 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Network Security ML Analysis{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Hero Section -->
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="text-center mb-5">
+                <div class="display-4 mb-3">
+                    <i class="fas fa-shield-alt text-primary"></i>
+                </div>
+                <h1 class="display-5 fw-bold mb-3">Network Security ML Analysis</h1>
+                <p class="lead text-muted">
+                    Advanced machine learning platform for network security analysis, anomaly detection, 
+                    and authentication failure prediction using state-of-the-art algorithms.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Grid -->
+    <div class="row g-4 mb-5">
+        <div class="col-lg-6">
+            <div class="card h-100 border-0 shadow-sm hover-card">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="feature-icon bg-primary text-white rounded-circle me-3">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h5 class="card-title mb-0">Exploratory Data Analysis</h5>
+                    </div>
+                    <p class="card-text text-muted mb-3">
+                        Comprehensive data visualization and statistical analysis of network security metrics 
+                        including packet analysis, CPU usage, memory utilization, and security events.
+                    </p>
+                    <a href="{{ url_for('eda') }}" class="btn btn-outline-primary">
+                        <i class="fas fa-chart-bar me-2"></i>Explore Data
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card h-100 border-0 shadow-sm hover-card">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="feature-icon bg-success text-white rounded-circle me-3">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <h5 class="card-title mb-0">Model Performance</h5>
+                    </div>
+                    <p class="card-text text-muted mb-3">
+                        Compare performance of different machine learning algorithms including KNN, SVC, 
+                        and C45 Tree Classifier for both anomaly detection and authentication failure prediction.
+                    </p>
+                    <a href="{{ url_for('performance') }}" class="btn btn-outline-success">
+                        <i class="fas fa-tachometer-alt me-2"></i>View Performance
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card h-100 border-0 shadow-sm hover-card">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="feature-icon bg-info text-white rounded-circle me-3">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h5 class="card-title mb-0">AI Predictions</h5>
+                    </div>
+                    <p class="card-text text-muted mb-3">
+                        Make real-time predictions for network anomalies and authentication failures 
+                        using trained ML models with both single input and batch processing capabilities.
+                    </p>
+                    <a href="{{ url_for('prediction') }}" class="btn btn-outline-info">
+                        <i class="fas fa-magic me-2"></i>Make Predictions
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card h-100 border-0 shadow-sm hover-card">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="feature-icon bg-warning text-white rounded-circle me-3">
+                            <i class="fas fa-cog"></i>
+                        </div>
+                        <h5 class="card-title mb-0">Model Management</h5>
+                    </div>
+                    <p class="card-text text-muted mb-3">
+                        Intelligent model persistence with automatic saving and loading. Train once, 
+                        use multiple times with efficient model caching and storage management.
+                    </p>
+                    <div class="btn-group">
+                        <button class="btn btn-outline-warning" disabled>
+                            <i class="fas fa-save me-2"></i>Auto-Save Models
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Key Statistics -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-transparent">
+                    <h5 class="mb-0">
+                        <i class="fas fa-info-circle text-primary me-2"></i>
+                        Platform Overview
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-md-3 col-6 mb-3">
+                            <div class="stat-card">
+                                <div class="stat-number text-primary">3</div>
+                                <div class="stat-label text-muted">ML Algorithms</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-6 mb-3">
+                            <div class="stat-card">
+                                <div class="stat-number text-success">14</div>
+                                <div class="stat-label text-muted">Input Features</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-6 mb-3">
+                            <div class="stat-card">
+                                <div class="stat-number text-info">2</div>
+                                <div class="stat-label text-muted">Prediction Types</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-6 mb-3">
+                            <div class="stat-card">
+                                <div class="stat-number text-warning">5000+</div>
+                                <div class="stat-label text-muted">Training Samples</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Algorithm Details -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <h3 class="text-center mb-4">Supported Algorithms</h3>
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <div class="algorithm-card">
+                        <div class="algorithm-icon">
+                            <i class="fas fa-sitemap"></i>
+                        </div>
+                        <h6>K-Nearest Neighbors</h6>
+                        <small class="text-muted">Instance-based learning algorithm</small>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="algorithm-card">
+                        <div class="algorithm-icon">
+                            <i class="fas fa-vector-square"></i>
+                        </div>
+                        <h6>Support Vector Classifier</h6>
+                        <small class="text-muted">Margin-based classification</small>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="algorithm-card">
+                        <div class="algorithm-icon">
+                            <i class="fas fa-tree"></i>
+                        </div>
+                        <h6>Naive Bayes Classifier</h6>
+                        <small class="text-muted">Probabilistic classification</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

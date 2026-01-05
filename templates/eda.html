@@ -1,0 +1,208 @@
+{% extends "base.html" %}
+
+{% block title %}EDA - Network Security ML Analysis{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2 class="h3 mb-1">
+                        <i class="fas fa-chart-bar text-primary me-2"></i>
+                        Exploratory Data Analysis
+                    </h2>
+                    <p class="text-muted mb-0">Comprehensive analysis of network security dataset</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if stats %}
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="stat-icon bg-primary text-white rounded-circle mx-auto mb-2">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <div class="stat-number text-primary">{{ "{:,}".format(stats.total_samples) }}</div>
+                    <div class="stat-label text-muted">Total Samples</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="stat-icon bg-success text-white rounded-circle mx-auto mb-2">
+                        <i class="fas fa-columns"></i>
+                    </div>
+                    <div class="stat-number text-success">{{ stats.total_features }}</div>
+                    <div class="stat-label text-muted">Features</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="stat-icon bg-danger text-white rounded-circle mx-auto mb-2">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="stat-number text-danger">{{ "{:,}".format(stats.anomalous_samples) }}</div>
+                    <div class="stat-label text-muted">Anomalous</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="stat-icon bg-info text-white rounded-circle mx-auto mb-2">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-number text-info">{{ "{:,}".format(stats.normal_samples) }}</div>
+                    <div class="stat-label text-muted">Normal</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Visualizations -->
+    {% if plots %}
+    <div class="row">
+        <!-- Anomaly Distribution -->
+        <div class="col-lg-6 mb-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-transparent">
+                    <h6 class="mb-0">
+                        <i class="fas fa-pie-chart text-primary me-2"></i>
+                        Anomaly Distribution
+                    </h6>
+                </div>
+                <div class="card-body text-center">
+                    <img src="data:image/png;base64,{{ plots.anomaly_distribution }}" 
+                         class="img-fluid" alt="Anomaly Distribution">
+                </div>
+            </div>
+        </div>
+
+        <!-- Auth Failures Distribution -->
+        <div class="col-lg-6 mb-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-transparent">
+                    <h6 class="mb-0">
+                        <i class="fas fa-bar-chart text-success me-2"></i>
+                        Authentication Failures Distribution
+                    </h6>
+                </div>
+                <div class="card-body text-center">
+                    <img src="data:image/png;base64,{{ plots.auth_failures_distribution }}" 
+                         class="img-fluid" alt="Auth Failures Distribution">
+                </div>
+            </div>
+        </div>
+
+        <!-- Feature Correlation -->
+        <div class="col-12 mb-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-transparent">
+                    <h6 class="mb-0">
+                        <i class="fas fa-project-diagram text-info me-2"></i>
+                        Feature Correlation Heatmap
+                    </h6>
+                </div>
+                <div class="card-body text-center">
+                    <img src="data:image/png;base64,{{ plots.correlation_heatmap }}" 
+                         class="img-fluid" alt="Correlation Heatmap" style="max-height: 600px;">
+                </div>
+            </div>
+        </div>
+
+        <!-- CPU vs Memory Usage -->
+        <div class="col-lg-6 mb-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-transparent">
+                    <h6 class="mb-0">
+                        <i class="fas fa-scatter-chart text-warning me-2"></i>
+                        CPU vs Memory Usage
+                    </h6>
+                </div>
+                <div class="card-body text-center">
+                    <img src="data:image/png;base64,{{ plots.cpu_memory_scatter }}" 
+                         class="img-fluid" alt="CPU vs Memory Scatter">
+                </div>
+            </div>
+        </div>
+
+        <!-- Feature Distributions -->
+        <div class="col-lg-6 mb-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-transparent">
+                    <h6 class="mb-0">
+                        <i class="fas fa-chart-area text-secondary me-2"></i>
+                        Key Feature Distributions
+                    </h6>
+                </div>
+                <div class="card-body text-center">
+                    <img src="data:image/png;base64,{{ plots.feature_distributions }}" 
+                         class="img-fluid" alt="Feature Distributions">
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Data Insights -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-transparent">
+                    <h6 class="mb-0">
+                        <i class="fas fa-lightbulb text-warning me-2"></i>
+                        Key Insights
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="text-primary">Dataset Characteristics</h6>
+                            <ul class="list-unstyled text-muted">
+                                <li><i class="fas fa-check-circle text-success me-2"></i>Balanced dataset with both normal and anomalous samples</li>
+                                <li><i class="fas fa-check-circle text-success me-2"></i>14 numerical features for comprehensive analysis</li>
+                                <li><i class="fas fa-check-circle text-success me-2"></i>Authentication failures range from 0-9 levels</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-primary">Feature Relationships</h6>
+                            <ul class="list-unstyled text-muted">
+                                <li><i class="fas fa-info-circle text-info me-2"></i>Strong correlations between system resource metrics</li>
+                                <li><i class="fas fa-info-circle text-info me-2"></i>Network metrics show varying patterns</li>
+                                <li><i class="fas fa-info-circle text-info me-2"></i>Security events correlate with anomalous behavior</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% else %}
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center py-5">
+                    <div class="mb-4">
+                        <i class="fas fa-exclamation-circle text-warning" style="font-size: 4rem;"></i>
+                    </div>
+                    <h4 class="text-muted">Data Loading Error</h4>
+                    <p class="text-muted mb-4">Unable to load the network security dataset for analysis.</p>
+                    <button class="btn btn-primary" onclick="location.reload()">
+                        <i class="fas fa-redo me-2"></i>Retry Loading
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

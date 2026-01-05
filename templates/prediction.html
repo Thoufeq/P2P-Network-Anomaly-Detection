@@ -1,0 +1,488 @@
+{% extends "base.html" %}
+
+{% block title %}Prediction - Network Security ML Analysis{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2 class="h3 mb-1">
+                        <i class="fas fa-brain text-primary me-2"></i>
+                        Network Security Prediction
+                    </h2>
+                    <p class="text-muted mb-0">Make predictions for anomaly detection and authentication failures</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Prediction Type Tabs -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-transparent">
+                    <ul class="nav nav-tabs card-header-tabs" id="predictionTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="single-tab" data-bs-toggle="tab" data-bs-target="#single" 
+                                    type="button" role="tab">
+                                <i class="fas fa-keyboard me-2"></i>Single Input Prediction
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="batch-tab" data-bs-toggle="tab" data-bs-target="#batch" 
+                                    type="button" role="tab">
+                                <i class="fas fa-file-csv me-2"></i>Batch CSV Prediction
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-body">
+                    <div class="tab-content" id="predictionTabContent">
+                        <!-- Single Input Tab -->
+                        <div class="tab-pane fade show active" id="single" role="tabpanel">
+                            <form id="singlePredictionForm">
+                                <!-- Algorithm Selection -->
+                                <div class="row mb-4">
+                                    <div class="col-md-6">
+                                        <label for="singleAlgorithm" class="form-label">
+                                            <i class="fas fa-cog me-2"></i>Select Algorithm
+                                        </label>
+                                        <select class="form-select" id="singleAlgorithm" name="algorithm" required>
+                                            <option value="">Choose algorithm...</option>
+                                            <option value="KNN">K-Nearest Neighbors (KNN)</option>
+                                            <option value="SVC">Support Vector Classifier (SVC)</option>
+                                            <option value="NaiveBayes">Naive Bayes Classifier</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- Feature Inputs -->
+                                <h6 class="mb-3">
+                                    <i class="fas fa-sliders-h text-primary me-2"></i>
+                                    Network Features
+                                </h6>
+                                <div class="row g-3 mb-4">
+                                    <div class="col-md-4">
+                                        <label for="packet_size" class="form-label">Packet Size</label>
+                                        <input type="number" class="form-control" id="packet_size" name="Packet_Size" 
+                                               step="0.01" placeholder="e.g., 602" required>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="transmission_rate" class="form-label">Transmission Rate</label>
+                                        <input type="number" class="form-control" id="transmission_rate" name="Transmission_Rate" 
+                                               step="0.01" placeholder="e.g., 189.38" required>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="latency" class="form-label">Latency</label>
+                                        <input type="number" class="form-control" id="latency" name="Latency" 
+                                               step="0.01" placeholder="e.g., 13.39" required>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="protocol_type" class="form-label">Protocol Type</label>
+                                        <select class="form-select" id="protocol_type" name="Protocol_Type" required>
+                                            <option value="">Choose...</option>
+                                            <option value="0">Type 0</option>
+                                            <option value="1">Type 1</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="active_connections" class="form-label">Active Connections</label>
+                                        <input type="number" class="form-control" id="active_connections" name="Active_Connections" 
+                                               step="1" placeholder="e.g., 481" required>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="cpu_usage" class="form-label">CPU Usage (%)</label>
+                                        <input type="number" class="form-control" id="cpu_usage" name="CPU_Usage" 
+                                               step="0.01" min="0" max="100" placeholder="e.g., 43.74" required>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="memory_usage" class="form-label">Memory Usage</label>
+                                        <input type="number" class="form-control" id="memory_usage" name="Memory_Usage" 
+                                               step="0.01" placeholder="e.g., 5763.53" required>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="bandwidth_utilization" class="form-label">Bandwidth Utilization (%)</label>
+                                        <input type="number" class="form-control" id="bandwidth_utilization" name="Bandwidth_Utilization" 
+                                               step="0.01" min="0" max="100" placeholder="e.g., 57.44" required>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="request_response_time" class="form-label">Request Response Time</label>
+                                        <input type="number" class="form-control" id="request_response_time" name="Request_Response_Time" 
+                                               step="0.01" placeholder="e.g., 0.14" required>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="auth_failures" class="form-label">Auth Failures</label>
+                                        <input type="number" class="form-control" id="auth_failures" name="Auth_Failures" 
+                                               step="1" min="0" max="9" placeholder="e.g., 9" required>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="access_violations" class="form-label">Access Violations</label>
+                                        <input type="number" class="form-control" id="access_violations" name="Access_Violations" 
+                                               step="1" min="0" placeholder="e.g., 3" required>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="firewall_blocks" class="form-label">Firewall Blocks</label>
+                                        <input type="number" class="form-control" id="firewall_blocks" name="Firewall_Blocks" 
+                                               step="1" min="0" placeholder="e.g., 0" required>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="ids_alerts" class="form-label">IDS Alerts</label>
+                                        <input type="number" class="form-control" id="ids_alerts" name="IDS_Alerts" 
+                                               step="1" min="0" placeholder="e.g., 8" required>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="dwt_feature" class="form-label">DWT Feature 1</label>
+                                        <input type="number" class="form-control" id="dwt_feature" name="DWT_Feature_1" 
+                                               step="0.001" placeholder="e.g., 0.024" required>
+                                    </div>
+                                </div>
+
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-primary btn-lg">
+                                        <i class="fas fa-magic me-2"></i>
+                                        Make Prediction
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Batch CSV Tab -->
+                        <div class="tab-pane fade" id="batch" role="tabpanel">
+                            <form id="batchPredictionForm">
+                                <div class="row mb-4">
+                                    <div class="col-md-6">
+                                        <label for="batchAlgorithm" class="form-label">
+                                            <i class="fas fa-cog me-2"></i>Select Algorithm
+                                        </label>
+                                        <select class="form-select" id="batchAlgorithm" name="algorithm" required>
+                                            <option value="">Choose algorithm...</option>
+                                            <option value="KNN">K-Nearest Neighbors (KNN)</option>
+                                            <option value="SVC">Support Vector Classifier (SVC)</option>
+                                            <option value="NaiveBayes">Naive Bayes Classifier</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="csvFile" class="form-label">
+                                            <i class="fas fa-file-csv me-2"></i>Upload CSV File
+                                        </label>
+                                        <input type="file" class="form-control" id="csvFile" name="file" 
+                                               accept=".csv" required>
+                                        <div class="form-text">Upload a CSV file with the same format as testdata.csv</div>
+                                    </div>
+                                </div>
+
+                                <div class="alert alert-info">
+                                    <h6><i class="fas fa-info-circle me-2"></i>CSV Format Requirements</h6>
+                                    <p class="mb-0">Your CSV file should contain the following columns:</p>
+                                    <small class="text-muted">
+                                        Packet_Size, Transmission_Rate, Latency, Protocol_Type, Active_Connections, 
+                                        CPU_Usage, Memory_Usage, Bandwidth_Utilization, Request_Response_Time, 
+                                        Auth_Failures, Access_Violations, Firewall_Blocks, IDS_Alerts, DWT_Feature_1
+                                    </small>
+                                </div>
+
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-success btn-lg">
+                                        <i class="fas fa-upload me-2"></i>
+                                        Process Batch Predictions
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Indicator -->
+    <div id="predictionLoading" class="row d-none">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center py-5">
+                    <div class="spinner-border text-primary mb-3" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <h5>Making Predictions...</h5>
+                    <p class="text-muted">Please wait while we process your data.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Container -->
+    <div id="predictionResults" class="d-none">
+        <!-- Single prediction results will be populated here -->
+    </div>
+
+    <!-- Batch Results Container -->
+    <div id="batchResults" class="d-none">
+        <!-- Batch prediction results will be populated here -->
+    </div>
+
+    <!-- Error Container -->
+    <div id="predictionError" class="row d-none">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm border-danger">
+                <div class="card-body text-center py-5">
+                    <div class="mb-4">
+                        <i class="fas fa-exclamation-triangle text-danger" style="font-size: 4rem;"></i>
+                    </div>
+                    <h4 class="text-danger">Prediction Error</h4>
+                    <p class="text-muted mb-4" id="predictionErrorMessage">An error occurred while making predictions.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Single Prediction Form Handler
+document.getElementById('singlePredictionForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    
+    // Show loading
+    showLoading();
+    
+    fetch('/predict_single', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        hideLoading();
+        if (data.error) {
+            showError(data.error);
+        } else {
+            showSingleResults(data);
+        }
+    })
+    .catch(error => {
+        hideLoading();
+        showError('Network error: ' + error.message);
+    });
+});
+
+// Batch Prediction Form Handler
+document.getElementById('batchPredictionForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    
+    // Show loading
+    showLoading();
+    
+    fetch('/predict_batch', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        hideLoading();
+        if (data.error) {
+            showError(data.error);
+        } else {
+            showBatchResults(data);
+        }
+    })
+    .catch(error => {
+        hideLoading();
+        showError('Network error: ' + error.message);
+    });
+});
+
+function showLoading() {
+    document.getElementById('predictionLoading').classList.remove('d-none');
+    document.getElementById('predictionResults').classList.add('d-none');
+    document.getElementById('batchResults').classList.add('d-none');
+    document.getElementById('predictionError').classList.add('d-none');
+}
+
+function hideLoading() {
+    document.getElementById('predictionLoading').classList.add('d-none');
+}
+
+function showError(message) {
+    document.getElementById('predictionError').classList.remove('d-none');
+    document.getElementById('predictionErrorMessage').textContent = message;
+}
+
+function showSingleResults(data) {
+    const container = document.getElementById('predictionResults');
+    container.innerHTML = `
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-transparent">
+                        <h6 class="mb-0">
+                            <i class="fas fa-bullseye text-success me-2"></i>
+                            Prediction Results
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="result-card ${data.anomaly_classification_result.prediction === 1 ? 'border-danger' : 'border-success'}">
+                                    <h6 class="text-primary">
+                                        <i class="fas fa-search me-2"></i>Anomaly Detection
+                                    </h6>
+                                    <div class="result-value ${data.anomaly_classification_result.prediction === 1 ? 'text-danger' : 'text-success'}">
+                                        <i class="fas fa-${data.anomaly_classification_result.prediction === 1 ? 'exclamation-triangle' : 'check-circle'} me-2"></i>
+                                        ${data.anomaly_classification_result.label}
+                                    </div>
+                                    ${data.anomaly_classification_result.confidence > 0 ? `
+                                    <div class="result-confidence">
+                                        Confidence: ${(data.anomaly_classification_result.confidence * 100).toFixed(2)}%
+                                    </div>
+                                    ` : ''}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="result-card border-info">
+                                    <h6 class="text-primary">
+                                        <i class="fas fa-key me-2"></i>Auth Failures Classification
+                                    </h6>
+                                    <div class="result-value text-info">
+                                        <i class="fas fa-level-up-alt me-2"></i>
+                                        Level ${data.auth_classification_result.auth_failures_level}
+                                    </div>
+                                    <div class="result-confidence">
+                                        Predicted Auth Failures: ${data.auth_classification_result.prediction}
+                                        ${data.auth_classification_result.confidence > 0 ? ` (${(data.auth_classification_result.confidence * 100).toFixed(2)}% confidence)` : ''}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    container.classList.remove('d-none');
+}
+
+function showBatchResults(data) {
+    const container = document.getElementById('batchResults');
+    
+    // Summary statistics
+    let summaryHtml = `
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-transparent">
+                        <h6 class="mb-0">
+                            <i class="fas fa-chart-pie text-primary me-2"></i>
+                            Batch Prediction Summary
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col-md-3">
+                                <div class="stat-card">
+                                    <div class="stat-number text-primary">${data.total_predictions}</div>
+                                    <div class="stat-label">Total Predictions</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="stat-card">
+                                    <div class="stat-number text-danger">${data.anomalous_count}</div>
+                                    <div class="stat-label">Anomalous</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="stat-card">
+                                    <div class="stat-number text-success">${data.normal_count}</div>
+                                    <div class="stat-label">Normal</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="stat-card">
+                                    <div class="stat-number text-info">${((data.anomalous_count / data.total_predictions) * 100).toFixed(1)}%</div>
+                                    <div class="stat-label">Anomaly Rate</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    // Detailed results table (limited to first 100)
+    let tableHtml = `
+        <div class="row">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-transparent">
+                        <h6 class="mb-0">
+                            <i class="fas fa-table text-info me-2"></i>
+                            Detailed Results ${data.predictions.length < data.total_predictions ? '(First 100 rows)' : ''}
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Row</th>
+                                        <th>Anomaly Detection</th>
+                                        <th>Auth Failures Classification</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+    `;
+
+    data.predictions.forEach(pred => {
+        const anomalyBadge = pred.anomaly_classification.prediction === 1 
+            ? '<span class="badge bg-danger">Anomalous</span>' 
+            : '<span class="badge bg-success">Normal</span>';
+        
+        tableHtml += `
+            <tr>
+                <td>${pred.row}</td>
+                <td>${anomalyBadge}</td>
+                <td><span class="badge bg-info">Level ${pred.auth_classification.auth_failures_level}</span></td>
+            </tr>
+        `;
+    });
+
+    tableHtml += `
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    container.innerHTML = summaryHtml + tableHtml;
+    container.classList.remove('d-none');
+}
+
+// Load sample data function
+function loadSampleData() {
+    // Sample data from the first row of the dataset
+    document.getElementById('packet_size').value = 602;
+    document.getElementById('transmission_rate').value = 189.384208;
+    document.getElementById('latency').value = 13.39276514;
+    document.getElementById('protocol_type').value = 1;
+    document.getElementById('active_connections').value = 481;
+    document.getElementById('cpu_usage').value = 43.73503418;
+    document.getElementById('memory_usage').value = 5763.534906;
+    document.getElementById('bandwidth_utilization').value = 57.43797264;
+    document.getElementById('request_response_time').value = 0.142441543;
+    document.getElementById('auth_failures').value = 9;
+    document.getElementById('access_violations').value = 3;
+    document.getElementById('firewall_blocks').value = 0;
+    document.getElementById('ids_alerts').value = 8;
+    document.getElementById('dwt_feature').value = 0.023823202;
+}
+</script>
+{% endblock %}

@@ -1,0 +1,386 @@
+{% extends "base.html" %}
+
+{% block title %}Performance - Network Security ML Analysis{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2 class="h3 mb-1">
+                        <i class="fas fa-tachometer-alt text-primary me-2"></i>
+                        Model Performance Comparison
+                    </h2>
+                    <p class="text-muted mb-0">Train and evaluate machine learning models</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Algorithm Selection -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-transparent">
+                    <h6 class="mb-0">
+                        <i class="fas fa-cogs text-success me-2"></i>
+                        Select Algorithms to Train
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <form id="algorithmForm">
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="KNN" id="knn" checked>
+                                    <label class="form-check-label" for="knn">
+                                        <i class="fas fa-sitemap text-primary me-2"></i>
+                                        <strong>K-Nearest Neighbors (KNN)</strong>
+                                        <br>
+                                        <small class="text-muted">Instance-based learning algorithm</small>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="SVC" id="svc" checked>
+                                    <label class="form-check-label" for="svc">
+                                        <i class="fas fa-vector-square text-success me-2"></i>
+                                        <strong>Support Vector Classifier (SVC)</strong>
+                                        <br>
+                                        <small class="text-muted">Margin-based classification</small>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="NaiveBayes" id="naivebayes" checked>
+                                    <label class="form-check-label" for="c45">
+                                        <i class="fas fa-tree text-info me-2"></i>
+                                        <strong>Naive Bayes Classifier</strong>
+                                        <br>
+                                        <small class="text-muted">Interpretable decision tree</small>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-play me-2"></i>
+                                Train & Evaluate Models
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Indicator -->
+    <div id="loadingIndicator" class="row d-none">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center py-5">
+                    <div class="spinner-border text-primary mb-3" role="status" id="loadingSpinner">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <h5>Training Models...</h5>
+                    <p class="text-muted">Please wait while we train and evaluate the selected algorithms.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Container -->
+    <div id="resultsContainer" class="d-none">
+        <!-- Anomaly Classification Results -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-transparent">
+                        <h6 class="mb-0">
+                            <i class="fas fa-search text-primary me-2"></i>
+                            Anomaly Detection Classification Results
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row" id="anomalyClassificationResults">
+                            <!-- Anomaly classification results will be populated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Auth Failures Classification Results -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-transparent">
+                        <h6 class="mb-0">
+                            <i class="fas fa-key text-success me-2"></i>
+                            Auth Failures Classification Results
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row" id="authClassificationResults">
+                            <!-- Auth failures classification results will be populated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Performance Chart -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-transparent">
+                        <h6 class="mb-0">
+                            <i class="fas fa-chart-bar text-info me-2"></i>
+                            Performance Comparison Chart
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="performanceChart" width="400" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Error Container -->
+    <div id="errorContainer" class="row d-none">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm border-danger">
+                <div class="card-body text-center py-5">
+                    <div class="mb-4">
+                        <i class="fas fa-exclamation-triangle text-danger" style="font-size: 4rem;"></i>
+                    </div>
+                    <h4 class="text-danger">Training Error</h4>
+                    <p class="text-muted mb-4" id="errorMessage">An error occurred while training the models.</p>
+                    <button class="btn btn-primary" onclick="location.reload()">
+                        <i class="fas fa-redo me-2"></i>Try Again
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<style>
+/* Stop rotation once training is completed */
+.spinner-border.stopped {
+    animation: none !important;
+}
+</style>
+
+<script>
+document.getElementById('algorithmForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+    const selectedAlgorithms = Array.from(checkboxes).map(cb => cb.value);
+    
+    if (selectedAlgorithms.length === 0) {
+        alert('Please select at least one algorithm to train.');
+        return;
+    }
+    
+    document.getElementById('loadingIndicator').classList.remove('d-none');
+    document.getElementById('resultsContainer').classList.add('d-none');
+    document.getElementById('errorContainer').classList.add('d-none');
+    
+    fetch('/train_models', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            algorithms: selectedAlgorithms
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('loadingIndicator').classList.add('d-none');
+        
+        if (data.error) {
+            showError(data.error);
+        } else {
+            // stop spinner after task completion
+            document.getElementById('loadingSpinner').classList.add('stopped');
+            showResults(data);
+        }
+    })
+    .catch(error => {
+        document.getElementById('loadingIndicator').classList.add('d-none');
+        showError('Network error: ' + error.message);
+    });
+});
+
+function showResults(data) {
+    document.getElementById('resultsContainer').classList.remove('d-none');
+    
+    const anomalyContainer = document.getElementById('anomalyClassificationResults');
+    anomalyContainer.innerHTML = '';
+    
+    Object.keys(data.anomaly_classification_results).forEach(algorithm => {
+        const results = data.anomaly_classification_results[algorithm];
+        const col = document.createElement('div');
+        col.className = 'col-md-4 mb-3';
+        col.innerHTML = `
+            <div class="card border-0 bg-light h-100">
+                <div class="card-body text-center">
+                    <h6 class="card-title text-primary">${algorithm}</h6>
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <div class="metric-card">
+                                <div class="metric-value">${(results.accuracy * 100).toFixed(2)}%</div>
+                                <div class="metric-label">Accuracy</div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="metric-card">
+                                <div class="metric-value">${(results.precision * 100).toFixed(2)}%</div>
+                                <div class="metric-label">Precision</div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="metric-card">
+                                <div class="metric-value">${(results.recall * 100).toFixed(2)}%</div>
+                                <div class="metric-label">Recall</div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="metric-card">
+                                <div class="metric-value">${(results.f1_score * 100).toFixed(2)}%</div>
+                                <div class="metric-label">F1-Score</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        anomalyContainer.appendChild(col);
+    });
+    
+    const authContainer = document.getElementById('authClassificationResults');
+    authContainer.innerHTML = '';
+    
+    Object.keys(data.auth_classification_results).forEach(algorithm => {
+        const results = data.auth_classification_results[algorithm];
+        const col = document.createElement('div');
+        col.className = 'col-md-4 mb-3';
+        col.innerHTML = `
+            <div class="card border-0 bg-light h-100">
+                <div class="card-body text-center">
+                    <h6 class="card-title text-success">${algorithm}</h6>
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <div class="metric-card">
+                                <div class="metric-value">${(results.accuracy * 100).toFixed(2)}%</div>
+                                <div class="metric-label">Accuracy</div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="metric-card">
+                                <div class="metric-value">${(results.precision * 100).toFixed(2)}%</div>
+                                <div class="metric-label">Precision</div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="metric-card">
+                                <div class="metric-value">${(results.recall * 100).toFixed(2)}%</div>
+                                <div class="metric-label">Recall</div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="metric-card">
+                                <div class="metric-value">${(results.f1_score * 100).toFixed(2)}%</div>
+                                <div class="metric-label">F1-Score</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        authContainer.appendChild(col);
+    });
+    
+    createPerformanceChart(data);
+}
+
+function showError(message) {
+    document.getElementById('errorContainer').classList.remove('d-none');
+    document.getElementById('errorMessage').textContent = message;
+}
+
+function createPerformanceChart(data) {
+    const ctx = document.getElementById('performanceChart').getContext('2d');
+    
+    const algorithms = Object.keys(data.anomaly_classification_results);
+    const anomalyAccuracyData = algorithms.map(alg => (data.anomaly_classification_results[alg].accuracy * 100).toFixed(2));
+    const authAccuracyData = algorithms.map(alg => (data.auth_classification_results[alg].accuracy * 100).toFixed(2));
+    const anomalyF1Data = algorithms.map(alg => (data.anomaly_classification_results[alg].f1_score * 100).toFixed(2));
+    const authF1Data = algorithms.map(alg => (data.auth_classification_results[alg].f1_score * 100).toFixed(2));
+    
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: algorithms,
+            datasets: [
+                {
+                    label: 'Anomaly Detection Accuracy (%)',
+                    data: anomalyAccuracyData,
+                    backgroundColor: 'rgba(54, 162, 235, 0.8)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Auth Failures Accuracy (%)',
+                    data: authAccuracyData,
+                    backgroundColor: 'rgba(75, 192, 192, 0.8)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Anomaly Detection F1-Score (%)',
+                    data: anomalyF1Data,
+                    backgroundColor: 'rgba(255, 99, 132, 0.8)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Auth Failures F1-Score (%)',
+                    data: authF1Data,
+                    backgroundColor: 'rgba(255, 206, 86, 0.8)',
+                    borderColor: 'rgba(255, 206, 86, 1)',
+                    borderWidth: 1
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100
+                }
+            },
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: true,
+                    text: 'Algorithm Performance Comparison'
+                }
+            }
+        }
+    });
+}
+</script>
+{% endblock %}
