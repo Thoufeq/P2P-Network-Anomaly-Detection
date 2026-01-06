@@ -3,7 +3,7 @@
 # 🚨 P2P Network Traffic Anomaly Detection System
 
 ![Python Version](https://img.shields.io/badge/python-3.8%2B-blue)
-![License](https://img.shields.io/badge/license-Apache-2.0-green)
+![License](https://img.shields.io/badge/license-Apache_2.0-green)
 ![Flask](https://img.shields.io/badge/framework-Flask-lightgrey)
 
 ## 📌 Overview
