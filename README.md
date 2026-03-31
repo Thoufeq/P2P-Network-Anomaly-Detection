@@ -1,19 +1,19 @@
 ---
 
-# 🚨 P2P Network Traffic Anomaly Detection System
+# P2P Network Traffic Anomaly Detection System
 
 ![Python Version](https://img.shields.io/badge/python-3.8%2B-blue)
 ![License](https://img.shields.io/badge/license-Apache_2.0-green)
 ![Flask](https://img.shields.io/badge/framework-Flask-lightgrey)
 
-## 📌 Overview
+## Overview
 Peer-to-Peer (P2P) networks play a crucial role in modern distributed systems. However, their decentralized nature introduces significant security challenges. Traditional signature-based systems often fail to catch zero-day threats or evolving malicious patterns.
 
 This project presents an **Intelligent P2P Network Traffic Anomaly Detection System** that leverages machine learning to analyze flow-level network traffic. Instead of relying on predefined rules, the system learns the statistical "fingerprint" of normal traffic and identifies deviations that indicate malware, unauthorized access, or abnormal P2P behavior.
 
 ---
 
-## 🎯 Objectives
+## Objectives
 * **Behavioral Detection:** Identify anomalies using ML rather than static signatures.
 * **Flow-Level Analysis:** Analyze traffic via packet rates, durations, and resource usage.
 * **Accessibility:** Provide a web-based interface for both single-record and batch (CSV) predictions.
@@ -21,7 +21,7 @@ This project presents an **Intelligent P2P Network Traffic Anomaly Detection Sys
 
 ---
 
-## ⭐ Key Features
+## Key Features
 * **Multi-Model Support:** Choose between KNN, SVC, and Naive Bayes.
 * **Data Preprocessing:** Automated feature scaling and handling of class imbalance using **SMOTE**.
 * **Dual-Level Classification:**
@@ -31,7 +31,7 @@ This project presents an **Intelligent P2P Network Traffic Anomaly Detection Sys
 
 ---
 
-## 🧠 System Architecture
+## System Architecture
 
 The system follows a modular pipeline to ensure data integrity and model accuracy:
 
@@ -45,7 +45,7 @@ The system follows a modular pipeline to ensure data integrity and model accurac
 
 ---
 
-## 📂 Project Folder Structure
+## Project Folder Structure
 ```text
 MajorProjectCode/
 │
@@ -65,7 +65,7 @@ MajorProjectCode/
 
 ---
 
-## 🧪 Machine Learning Models Used
+## Machine Learning Models Used
 
 | Model | Use Case | Strength |
 | --- | --- | --- |
@@ -75,7 +75,7 @@ MajorProjectCode/
 
 ---
 
-## 📈 Dataset Description
+## Dataset Description
 
 The system utilizes flow-level statistics rather than raw packet inspection, focusing on features such as:
 
@@ -85,7 +85,7 @@ The system utilizes flow-level statistics rather than raw packet inspection, foc
 
 ---
 
-## 🚀 How to Run
+## How to Run
 
 ### 1. Clone the Repository
 
@@ -125,7 +125,7 @@ Open your browser and navigate to:
 
 ---
 
-## 🔮 Future Enhancements
+## Future Enhancements
 
 * **Real-time Capture:** Integration with Scapy or Wireshark for live packet sniffing.
 * **Deep Learning:** Implementing LSTM or Autoencoders for time-series anomaly detection.
